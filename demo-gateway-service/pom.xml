@@ -4,12 +4,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>gateway</artifactId>
+		<artifactId>demo-getway</artifactId>
 		<groupId>com.jy</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.jy.gateway</groupId>
+	<groupId>com.jy.demo-getway</groupId>
 	<artifactId>demo-gateway-service</artifactId>
 
 	<properties>
@@ -63,6 +63,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.5.9.RELEASE</version>
 			</plugin>
 
 			<plugin>

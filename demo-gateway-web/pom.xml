@@ -3,14 +3,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<parent>
-		<artifactId>gateway</artifactId>
+		<artifactId>demo-getway</artifactId>
 		<groupId>com.jy</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.jy.gateway</groupId>
+	<groupId>com.jy.demo-getway</groupId>
 	<artifactId>demo-gateway-web</artifactId>
 
 	<properties>
@@ -22,7 +22,7 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>com.jy.gateway</groupId>
+			<groupId>com.jy.demo-getway</groupId>
 			<artifactId>demo-gateway-service</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
@@ -56,6 +56,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>1.5.9.RELEASE</version>
 			</plugin>
 		</plugins>
 	</build>

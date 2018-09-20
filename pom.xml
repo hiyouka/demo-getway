@@ -4,7 +4,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.jy</groupId>
-	<artifactId>gateway</artifactId>
+	<artifactId>demo-getway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
@@ -152,8 +152,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-
 
 
 </project>
