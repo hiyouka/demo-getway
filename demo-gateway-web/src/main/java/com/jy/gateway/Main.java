@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @MapperScan("com.jy.gateway.mapper")
 @ComponentScan({"com.jy.gateway.filter", "com.jy.gateway.controller", "com.jy.gateway.service", "com.jy.gateway.config"})
 @EnableTransactionManagement
-public class DemoGetwayApplication {
+public class Main {
 
 	@Bean
 	@LoadBalanced
@@ -26,7 +26,7 @@ public class DemoGetwayApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoGetwayApplication.class, args);
+		SpringApplication.run(Main.class, args);
 	}
 
 }
