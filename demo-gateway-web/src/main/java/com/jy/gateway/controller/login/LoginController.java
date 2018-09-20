@@ -1,6 +1,7 @@
 package com.jy.gateway.controller.login;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * create by jianglei on 2018/9/17
@@ -10,17 +11,15 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class LoginController {
 
-
 //    @GetMapping("/login")
-//    public String login(HttpServletRequest request,String _appId){
-//        if("blog".equals(_appId)){
-//            return "";
-//        }
-//        return "login";
+//    public String login(){
+//
+//        return "";
 //    }
 
-//    @GetMapping("/doFilter")
-//    public Result
-
+    @GetMapping("/doRedirect")
+    public String doDirect(){
+        return "home";
+    }
 
 }

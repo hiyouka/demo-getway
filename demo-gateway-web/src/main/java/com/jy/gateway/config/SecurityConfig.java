@@ -52,10 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/cc","/user/rabbit/**","/user/kk").permitAll()
                 .anyRequest().authenticated()
                 .and()
+
                 .formLogin()
 //                .loginProcessingUrl("").permitAll()
-                .loginPage("/front/index").permitAll()
-                .successForwardUrl("/doFilter")
+//                .loginPage("/front/index").permitAll()
+                .successForwardUrl("/doRedirect")
                 .failureUrl("/login?error")
                 .permitAll()
                 .and()
