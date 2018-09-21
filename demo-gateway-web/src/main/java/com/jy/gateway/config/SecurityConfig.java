@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("**/static/**","**/css/**","**/**/favicon.ico");//不拦截静态资源
+        web.ignoring().antMatchers("/**/*.js","/**/*.min.js", "/**/*.png","/**/*.css","/*.git","/*.jpg",
+                "/static/**","/css/**","/**/favicon.ico","/js/**","/images/**", "/img/**","/imgs/**");//不拦截静态资源
     }
 
     @Override
@@ -61,9 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/cc","/user/rabbit/**","/user/kk").permitAll()
                 .anyRequest().authenticated()
                 .and()
-
                 .formLogin()
-                .loginPage("http://192.168.0.1:9001/index").permitAll()
+                .loginPage("/front/index").permitAll()
                 .successForwardUrl("/doRedirect")
                 .failureUrl("/login?error")
                 .permitAll()
