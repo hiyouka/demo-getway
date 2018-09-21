@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .formLogin()
-                .loginPage("/front/index").permitAll()
+                .loginPage("http://192.168.0.1:9001/index").permitAll()
                 .successForwardUrl("/doRedirect")
                 .failureUrl("/login?error")
                 .permitAll()
