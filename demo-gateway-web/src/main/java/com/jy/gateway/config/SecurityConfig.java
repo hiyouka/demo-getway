@@ -1,5 +1,6 @@
 package com.jy.gateway.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,7 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.web.filter.CorsFilter;
 /**
  * @author jianglei
  * @create 2018/6/12
@@ -18,11 +20,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private CorsFilter corsFilter;//跨域配置过滤器
+
     @Bean("userDetails")
     public UserDetailsService customUserService(){
         return new MyUserDetailsService();
     }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -44,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(corsFilter, ChannelProcessingFilter.class)
                 .authorizeRequests()
                 .antMatchers("/main").permitAll()
                 .antMatchers("/user/space").hasAnyRole("ADMIN","FRIEND")
@@ -54,8 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .formLogin()
-//                .loginProcessingUrl("").permitAll()
-//                .loginPage("/front/index").permitAll()
+                .loginPage("/front/index").permitAll()
                 .successForwardUrl("/doRedirect")
                 .failureUrl("/login?error")
                 .permitAll()
