@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.web.filter.CorsFilter;
+
 /**
  * @author jianglei
  * @create 2018/6/12
@@ -26,6 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CorsFilter corsFilter;//跨域配置过滤器
 
     @Bean("userDetails")
+
     public UserDetailsService customUserService(){
         return new MyUserDetailsService();
     }

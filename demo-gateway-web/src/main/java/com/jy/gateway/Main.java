@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
@@ -45,31 +46,34 @@ public class Main {
 		for(String o : origin) {
 			config.addAllowedOrigin(o);
 		}
-		//自定义AllowedHeader
-		config.addAllowedHeader("ACCESS-TOKEN");
-		config.addAllowedHeader("USER-ID");
-		config.addAllowedHeader("LOGIN-TYPE");
-		config.addAllowedHeader("STORE-TOKEN");
-//        PDF
-		config.addAllowedHeader("Accept-Ranges");
-//        config.addAllowedMethod("*");
-//        config.addAllowedHeader("*");
-//        //
-//        config.addAllowedOrigin("*");
-		config.addAllowedHeader("Origin");
-		config.addAllowedHeader("Content-Type");
-		config.addAllowedHeader("Accept");
-		config.addAllowedHeader("Cache-Control");
-		config.addAllowedHeader("Authorization");
-		config.addAllowedHeader("token");
-		config.addAllowedHeader("X-Requested-With");
-		config.addAllowedMethod("POST");
-		config.addAllowedMethod("GET");
-		config.addAllowedMethod("PUT");
-		config.addAllowedMethod("OPTIONS");
-		config.addAllowedMethod("DELETE");
-		config.addExposedHeader("x-auth-token");
-		config.addExposedHeader("x-total-count");
+//		//自定义AllowedHeader
+//		config.addAllowedHeader("ACCESS-TOKEN");
+//		config.addAllowedHeader("USER-ID");
+//		config.addAllowedHeader("LOGIN-TYPE");
+//		config.addAllowedHeader("STORE-TOKEN");
+////        PDF
+//		config.addAllowedHeader("Accept-Ranges");
+////        config.addAllowedMethod("*");
+////        config.addAllowedHeader("*");
+////        //
+////        config.addAllowedOrigin("*");
+//		config.addAllowedHeader("Origin");
+//		config.addAllowedHeader("Content-Type");
+//		config.addAllowedHeader("Accept");
+//		config.addAllowedHeader("Cache-Control");
+//		config.addAllowedHeader("Authorization");
+//		config.addAllowedHeader("token");
+//		config.addAllowedHeader("X-Requested-With");
+//		config.addAllowedMethod("POST");
+//		config.addAllowedMethod("GET");
+//		config.addAllowedMethod("PUT");
+//		config.addAllowedMethod("OPTIONS");
+//		config.addAllowedMethod("DELETE");
+//		config.addExposedHeader("x-auth-token");
+//		config.addExposedHeader("x-total-count");
+//		source.registerCorsConfiguration("/**", config);
+		config.addAllowedHeader(CorsConfiguration.ALL);
+		config.addAllowedMethod(CorsConfiguration.ALL);
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
 	}
