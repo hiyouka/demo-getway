@@ -30,18 +30,6 @@ public class HomeController {
         return restTemplate.getForObject(frontUrl+"/index",String.class);
     }
 
-//    @RequestMapping("/login")
-//    public String login(Model model){
-//        return "redirect:/index";
-//    }
-
-
-
-//    @RequestMapping("/")
-//    public String toLogin(Model model){
-//        return "home";
-//    }
-
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

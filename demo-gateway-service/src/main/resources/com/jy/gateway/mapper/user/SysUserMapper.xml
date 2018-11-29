@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jy.gateway.mapper.user.SysUserMapper" >
-  <resultMap id="BaseResultMap" type="com.jy.gateway.model.user.SysUser" >
+
+  <resultMap id="BaseResultMap" type="com.jy.common.sso.model.User" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
     id, username, password
   </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
@@ -19,13 +22,15 @@
     delete from sys_user
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.jy.gateway.model.user.SysUser" >
+
+  <insert id="insert" parameterType="com.jy.common.sso.model.User" >
     insert into sys_user (id, username, password
       )
     values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jy.gateway.model.user.SysUser" >
+
+  <insert id="insertSelective" parameterType="com.jy.common.sso.model.User" >
     insert into sys_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -50,7 +55,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jy.gateway.model.user.SysUser" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.jy.common.sso.model.User" >
     update sys_user
     <set >
       <if test="username != null" >
@@ -62,14 +67,14 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jy.gateway.model.user.SysUser" >
+  <update id="updateByPrimaryKey" parameterType="com.jy.common.sso.model.User" >
     update sys_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-  <resultMap id="UserDetailMap" type="com.jy.gateway.model.user.SysUser" >
+  <resultMap id="UserDetailMap" type="com.jy.common.sso.model.User" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />

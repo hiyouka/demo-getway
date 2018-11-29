@@ -138,6 +138,26 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-test</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.jy.common</groupId>
+			<artifactId>common-sso</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jy.common</groupId>
+			<artifactId>common-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- jwt -->
+		<dependency>
+			<groupId>com.jy.party</groupId>
+			<artifactId>third-party</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- main of spring cloud -->

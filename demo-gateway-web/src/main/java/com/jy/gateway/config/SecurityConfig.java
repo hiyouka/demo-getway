@@ -1,16 +1,19 @@
 package com.jy.gateway.config;
 
+import com.jy.gateway.handler.LoginAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.filter.CorsFilter;
 
 /**
@@ -19,57 +22,81 @@ import org.springframework.web.filter.CorsFilter;
  * @since 1.0.0
  */
 
-@Configuration
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CorsFilter corsFilter;//跨域配置过滤器
 
-    @Bean("userDetails")
+    @Autowired
+    private AuthenticationFailureHandler ctwAuthenticationFailureHandler;
 
-    public UserDetailsService customUserService(){
-        return new MyUserDetailsService();
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
+
+    private static String[] noLoginUrl = {"/handError","/loginFailure","/callable*","/front/login*","/front/notFind","/test"};
+
+    @Bean("userDetails")
+        public UserDetailsService customUserService(){
+        return new UserDetailsService();
+    }
+
+    @Bean("loginAuthenticationProvider")
+    public AuthenticationProvider loginAuthenticationProvider(){
+        return new LoginAuthenticationProvider(customUserService(),new BCryptPasswordEncoder());
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         //并根据传入的AuthenticationManagerBuilder中的userDetailsService方法来接收我们自定义的认证方法。
         //且该方法必须要实现UserDetailsService这个接口。
-        auth.userDetailsService(customUserService())
-                //密码使用BCryptPasswordEncoder()方法验证，因为这里使用了BCryptPasswordEncoder()方法验证。
-                // 所以在注册用户的时候在接收前台明文密码之后也需要使用BCryptPasswordEncoder().encode(明文密码)方法加密密码。
-                .passwordEncoder(new BCryptPasswordEncoder());
+        auth.authenticationProvider(loginAuthenticationProvider());
+//        auth.userDetailsService(customUserService())
+//                //密码使用BCryptPasswordEncoder()方法验证，因为这里使用了BCryptPasswordEncoder()方法验证。
+//                // 所以在注册用户的时候在接收前台明文密码之后也需要使用BCryptPasswordEncoder().encode(明文密码)方法加密密码。
+//                .passwordEncoder(new BCryptPasswordEncoder());
 
     }
+
+
 
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/**/*.js","/**/*.min.js", "/**/*.png","/**/*.css","/*.git","/*.jpg",
-                "/static/**","/css/**","/**/favicon.ico","/js/**","/images/**", "/img/**","/imgs/**");//不拦截静态资源
+                "/static/**","/css/**","/**/favicon.ico","/js/**","/images/**", "/img/**","/imgs/**","/**/editor/**");//不拦截静态资源
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .addFilterBefore(corsFilter, ChannelProcessingFilter.class)
+        HttpSecurity security = http
+                .addFilterBefore(corsFilter, ChannelProcessingFilter.class);
+        security.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/main").permitAll()
-                .antMatchers("/user/space").hasAnyRole("ADMIN","FRIEND")
-                .antMatchers("/client/*").hasAnyRole("ADMIN","FRIEND","TEACHER")
-                .antMatchers("/user/line").hasRole("TEACHER")
-                .antMatchers("/user/cc","/user/rabbit/**","/user/kk").permitAll()
+//                .antMatchers("/login").permitAll()
+//                .antMatchers("/user/space").hasAnyRole("ADMIN","FRIEND")
+//                .antMatchers("/client/*").hasAnyRole("ADMIN","FRIEND","TEACHER")
+//                .antMatchers("/user/line").hasRole("TEACHER")
+//                .antMatchers("/user/cc","/user/rabbit/**","/user/kk").permitAll()
+                .antMatchers(noLoginUrl).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/front/index").permitAll()
-                .successForwardUrl("/doRedirect")
-                .failureUrl("/login?error")
+                .loginPage("/login")
+//                .defaultSuccessUrl("/main")
+//                .successForwardUrl("/doRedirect")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(ctwAuthenticationFailureHandler)
+//                .failureForwardUrl("/loginFailure")
                 .permitAll()
                 .and()
-                .logout().invalidateHttpSession(true)
-                .permitAll();
+                .logout().logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .permitAll()
+                .invalidateHttpSession(true);
     }
+
+
 
 }

@@ -1,19 +1,19 @@
 package com.jy.gateway.mapper.user;
 
-import com.jy.gateway.model.user.SysUser;
+import com.jy.common.sso.model.User;
 
 public interface SysUserMapper {
     int deleteByPrimaryKey(String id);
 
-    int insert(SysUser record);
+    int insert(User record);
 
-    int insertSelective(SysUser record);
+    int insertSelective(User record);
 
-    SysUser selectByPrimaryKey(String id);
+    User selectByPrimaryKey(String id);
 
-    int updateByPrimaryKeySelective(SysUser record);
+    int updateByPrimaryKeySelective(User record);
 
-    int updateByPrimaryKey(SysUser record);
+    int updateByPrimaryKey(User record);
 
-    SysUser selectByUserName(String username);
+    User selectByUserName(String username);
 }

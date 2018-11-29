@@ -1,8 +1,10 @@
 package com.jy.gateway.controller.user;
 
-import com.jy.gateway.model.user.SysUser;
+
+import com.jy.common.sso.model.User;
 import com.jy.gateway.service.user.UserService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +46,7 @@ public class UserController {
 
 
     @GetMapping("line")
-    public SysUser addWatch(){
+    public User addWatch(){
         return null;
     }
 
@@ -60,7 +65,7 @@ public class UserController {
     }
 
     @GetMapping("cc")
-    public SysUser test(){
+    public User test(){
 
 //        ApplicationContext applicationContext = ApplicationContextUtil.getApplicationContext();
 //        Environment environment = applicationContext.getEnvironment();
@@ -106,7 +111,7 @@ public class UserController {
 //        AuthenticationManager am = new SampleAuthenticationManager();
 //        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SysUser principal = (SysUser) authentication.getPrincipal();
+        User principal = (User) authentication.getPrincipal();
 
         return principal.getRoles().toString();
     }
@@ -116,6 +121,19 @@ public class UserController {
         HttpSession session = request.getSession(false);
         return
                 session.getAttribute("sessionId")==null?"无session信息":(String) session.getAttribute("sessionId");
+    }
+
+
+
+    @GetMapping("userProperty/get")
+    public String getSession() throws InvocationTargetException, IllegalAccessException {
+        PropertyDescriptor username = BeanUtils.getPropertyDescriptor(User.class, "username");
+        Method readMethod = username.getReadMethod();
+        User user = new User();
+        user.setUsername("haha");
+        Object invoke = readMethod.invoke(user);
+        System.out.println(invoke);
+        return invoke+"";
     }
 
 

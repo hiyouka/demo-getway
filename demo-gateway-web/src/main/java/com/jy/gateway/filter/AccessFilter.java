@@ -1,12 +1,19 @@
 package com.jy.gateway.filter;
 
+import com.jy.common.sso.model.User;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 /**
  * @author jianglei
@@ -15,6 +22,8 @@ import javax.servlet.http.HttpSession;
  */
 @Component
 public class AccessFilter extends ZuulFilter {
+
+    private Logger logger = LoggerFactory.getLogger(ZuulFilter.class);
 
     @Autowired
     private HttpServletRequest httpServletRequest;
@@ -37,6 +46,38 @@ public class AccessFilter extends ZuulFilter {
     @Override
     //实现zuul的run方法来执行具体的拦截代码
     public Object run() {
+
+        RequestContext context = RequestContext.getCurrentContext();
+
+        //避免自动生成Session
+        HttpSession httpSession = context.getRequest().getSession(false);
+//        Session session = repository.getSession(httpSession.getId());
+
+        if (httpSession != null) {
+            boolean aNew = httpSession.isNew();
+            Enumeration<String> attributeNames = httpSession.getAttributeNames();
+            while (attributeNames.hasMoreElements()){
+                logger.info("<<<<<<<<<<<<<<<>>>>>>>>>>>>" + attributeNames.nextElement());
+            }
+            context.addZuulRequestHeader("Cookie", "JSESSIONID=" + httpSession.getId());
+            try {
+                SecurityContext context1 = SecurityContextHolder.getContext();
+                Authentication authentication = context1.getAuthentication();
+                Object principal = authentication.getPrincipal();
+                if(!String.class.equals(principal.getClass())){ //当访问未进行登录拦截不需要登陆的页面
+                    String id = ((User) principal).getId();
+//                String userId = ((SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+                    logger.info("{} {}", httpSession.getId(), id);
+                }
+            } catch (Exception e) {
+                //不要用log
+                logger.error("get session userId mapping error!", e);
+            }
+        }
+
+        return null;
+    }/*
+
         RequestContext currentContext = RequestContext.getCurrentContext();
         //zuul添加对websocket的支持
         String upgrade = httpServletRequest.getHeader("Upgrade");
@@ -51,7 +92,7 @@ public class AccessFilter extends ZuulFilter {
         if (session != null){
             currentContext.addZuulRequestHeader("Cookie","JSESSIONID"+session.getId());
         }
-        
+
         return null;
-    }
+    }*/
 }

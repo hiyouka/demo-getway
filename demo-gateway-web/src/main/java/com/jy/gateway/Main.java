@@ -19,7 +19,8 @@ import org.springframework.web.filter.CorsFilter;
 @EnableEurekaClient//start eureka client to be find
 @SpringBootApplication
 @MapperScan("com.jy.gateway.mapper")
-@ComponentScan({"com.jy.gateway.filter", "com.jy.gateway.controller", "com.jy.gateway.service", "com.jy.gateway.config"})
+@ComponentScan({"com.jy.gateway.filter", "com.jy.gateway.controller", "com.jy.gateway.service",
+				"com.jy.gateway.config","com.jy.common.sso.config","com.jy.gateway.handler"})
 @EnableTransactionManagement
 public class Main {
 
