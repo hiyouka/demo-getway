@@ -61,7 +61,13 @@
 			<artifactId>spring-social-core</artifactId>
 		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>com.jy</groupId>
+            <artifactId>demo-geteway-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 		<plugins>

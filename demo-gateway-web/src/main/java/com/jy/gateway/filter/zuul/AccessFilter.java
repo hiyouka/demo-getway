@@ -1,18 +1,18 @@
-package com.jy.gateway.filter;
+package com.jy.gateway.filter.zuul;
 
 import com.jy.common.sso.model.User;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collection;
 import java.util.Enumeration;
 
 /**
@@ -25,8 +25,6 @@ public class AccessFilter extends ZuulFilter {
 
     private Logger logger = LoggerFactory.getLogger(ZuulFilter.class);
 
-    @Autowired
-    private HttpServletRequest httpServletRequest;
 
     @Override
     public String filterType() {
@@ -63,11 +61,19 @@ public class AccessFilter extends ZuulFilter {
             try {
                 SecurityContext context1 = SecurityContextHolder.getContext();
                 Authentication authentication = context1.getAuthentication();
-                Object principal = authentication.getPrincipal();
-                if(!String.class.equals(principal.getClass())){ //当访问未进行登录拦截不需要登陆的页面
-                    String id = ((User) principal).getId();
+                if(authentication != null){
+
+                    Object principal = authentication.getPrincipal();
+                    if(principal != null && principal.getClass() != String.class){ //当访问未进行登录拦截不需要登陆的页面
+                        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+                        authorities.forEach(grant ->{
+                            System.out.println(grant.getAuthority());
+                        });
+                        System.out.println(authentication.getCredentials()+">>>>>>>>>>>>");
+                        String id = ((User) principal).getId();
 //                String userId = ((SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-                    logger.info("{} {}", httpSession.getId(), id);
+                        logger.info("{} {}", httpSession.getId(), id);
+                    }
                 }
             } catch (Exception e) {
                 //不要用log

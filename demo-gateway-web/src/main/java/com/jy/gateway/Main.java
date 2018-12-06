@@ -15,12 +15,17 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @EnableZuulProxy//start zuul
 @EnableEurekaClient//start eureka client to be find
 @SpringBootApplication
 @MapperScan("com.jy.gateway.mapper")
-@ComponentScan({"com.jy.gateway.filter", "com.jy.gateway.controller", "com.jy.gateway.service",
-				"com.jy.gateway.config","com.jy.common.sso.config","com.jy.gateway.handler"})
+@ComponentScan({"com.jy.gateway","com.jy.common.sso.config"})
 @EnableTransactionManagement
 public class Main {
 
@@ -31,7 +36,33 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
+//		String encode = new BCryptPasswordEncoder().encode("123");
+//		System.out.println(encode);
 		SpringApplication.run(Main.class, args);
+	}
+
+	private static Field[] getAllField(Class<?> clazz){
+		List<Field> fieldList = new ArrayList<>();
+		List<Class> interfaces = new ArrayList<>();
+		boolean isSerlize = false;
+
+		while (clazz != null){
+			fieldList.addAll(new ArrayList<>(Arrays.asList(clazz.getDeclaredFields())));
+			clazz = clazz.getSuperclass();
+		}
+		if(isSerlize)
+			fieldList = fieldList.stream().filter(field -> !field.getName().equals("serialVersionUID")).collect(Collectors.toList());
+		Field[] fields = new Field[fieldList.size()];
+		return fieldList.toArray(fields);
+	}
+
+	private static List<Class<?>> getAllInterfaces(Class<?> clazz){
+		List<Class<?>> interfaces = new ArrayList<>();
+		while (clazz != null){
+			interfaces.addAll(Arrays.asList(clazz.getInterfaces()));
+			clazz = clazz.getSuperclass();
+		}
+		return interfaces;
 	}
 
 	@Value("${cors.origins}")
@@ -52,26 +83,26 @@ public class Main {
 //		config.addAllowedHeader("LOGIN-TYPE");
 //		config.addAllowedHeader("STORE-TOKEN");
 ////        PDF
-//		config.addAllowedHeader("Accept-Ranges");
-////        config.addAllowedMethod("*");
-////        config.addAllowedHeader("*");
-////        //
-////        config.addAllowedOrigin("*");
-//		config.addAllowedHeader("Origin");
-//		config.addAllowedHeader("Content-Type");
-//		config.addAllowedHeader("Accept");
-//		config.addAllowedHeader("Cache-Control");
-//		config.addAllowedHeader("Authorization");
-//		config.addAllowedHeader("token");
-//		config.addAllowedHeader("X-Requested-With");
-//		config.addAllowedMethod("POST");
-//		config.addAllowedMethod("GET");
-//		config.addAllowedMethod("PUT");
-//		config.addAllowedMethod("OPTIONS");
-//		config.addAllowedMethod("DELETE");
-//		config.addExposedHeader("x-auth-token");
-//		config.addExposedHeader("x-total-count");
-//		source.registerCorsConfiguration("/**", config);
+		config.addAllowedHeader("Accept-Ranges");
+//        config.addAllowedMethod("*");
+//        config.addAllowedHeader("*");
+//        //
+//        config.addAllowedOrigin("*");
+		config.addAllowedHeader("Origin");
+		config.addAllowedHeader("Content-Type");
+		config.addAllowedHeader("Accept");
+		config.addAllowedHeader("Cache-Control");
+		config.addAllowedHeader("Authorization");
+		config.addAllowedHeader("token");
+		config.addAllowedHeader("X-Requested-With");
+		config.addAllowedMethod("POST");
+		config.addAllowedMethod("GET");
+		config.addAllowedMethod("PUT");
+		config.addAllowedMethod("OPTIONS");
+		config.addAllowedMethod("DELETE");
+		config.addExposedHeader("x-auth-token");
+		config.addExposedHeader("x-total-count");
+		source.registerCorsConfiguration("/**", config);
 		config.addAllowedHeader(CorsConfiguration.ALL);
 		config.addAllowedMethod(CorsConfiguration.ALL);
 		source.registerCorsConfiguration("/**", config);

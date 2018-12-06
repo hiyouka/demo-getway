@@ -1,4 +1,4 @@
-package com.jy.gateway.config;
+package com.jy.gateway.config.security;
 
 import com.jy.common.sso.model.User;
 import com.jy.gateway.mapper.user.SysUserMapper;
@@ -7,16 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.social.security.SocialUserDetails;
+import org.springframework.social.security.SocialUserDetailsService;
+import org.springframework.stereotype.Component;
 
 /**
  * @author
  * @create 2018/6/1
  * @since 1.0.0
  */
-public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+@Component
+public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService ,SocialUserDetailsService {
 
-//    @Autowired
-//    private UserService userService;
       @Autowired
       private SysUserMapper sysUserMapper;
 
@@ -33,14 +35,18 @@ public class UserDetailsService implements org.springframework.security.core.use
         logger.info("用户登录 :{}" , user.getId() + "-" + user.getUsername());
 
         logger.info("用户权限 :{}" , user.getRoles());
-//        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-//        for (String role : user.getRoles()) {
-//            authorities.add(new SimpleGrantedAuthority(role));
-//        }
-//        SysUser securityUser = new SysUser();
-//        securityUser.setUsername(user.getUsername());
-//        securityUser.setPassword(user.getPassword());
-//        securityUser.set
         return user;
+    }
+
+    @Override
+    public SocialUserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+        User user = sysUserMapper.selectByUserId(userId);
+        if (user == null) {
+            throw new UsernameNotFoundException("用户不存在");
+        }
+        logger.info("用户登录 :{}" , user.getId() + "-" + user.getUsername());
+
+        logger.info("用户权限 :{}" , user.getRoles());
+        return (SocialUserDetails) user;
     }
 }

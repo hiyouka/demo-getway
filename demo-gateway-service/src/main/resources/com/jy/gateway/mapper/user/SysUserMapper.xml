@@ -93,4 +93,14 @@
     WHERE u.username = #{username,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByUserId" resultMap="UserDetailMap" parameterType="java.lang.String" >
+    SELECT
+    u.id id , u.username username , u.password password, r.name role
+    FROM
+    sys_role_user mr
+    LEFT JOIN sys_user u ON mr.sys_user_id = u.id
+    LEFT JOIN sys_role r ON mr.sys_role_id = r.id
+    WHERE u.username = #{userId,jdbcType=VARCHAR}
+  </select>
+
 </mapper>
