@@ -5,6 +5,7 @@ package com.jy.gateway.authentication;
 
 import com.jy.gateway.properties.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,8 +23,8 @@ public class AbstractChannelSecurityConfig extends WebSecurityConfigurerAdapter 
 	@Autowired
 	protected AuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
 	
-	@Autowired
-	protected AuthenticationFailureHandler defaultAuthenticationFailureHandler;
+	@Qualifier("tokenAuthenticationSuccessHandler")
+	protected AuthenticationFailureHandler authenticationFailureHandler;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -39,7 +40,7 @@ public class AbstractChannelSecurityConfig extends WebSecurityConfigurerAdapter 
 			.loginPage(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL)
 			.loginProcessingUrl(SecurityConstants.DEFAULT_LOGIN_PROCESSING_URL_FORM)
 			.successHandler(defaultAuthenticationSuccessHandler)
-			.failureHandler(defaultAuthenticationFailureHandler);
+			.failureHandler(authenticationFailureHandler);
 	}
 	
 }

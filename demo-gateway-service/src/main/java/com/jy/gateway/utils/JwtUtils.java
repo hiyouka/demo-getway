@@ -66,17 +66,17 @@ public class JwtUtils {
         SecretKey encryptSalt = getEncryptSalt();
         //创建JWT构建器.使用指定的加密算法生成token
         JwtBuilder builder = Jwts.builder()
-                .setId(id)                      //设置身份标记.客户端的唯一标记.可以使用用户主键,客户端的ip,服务器生成的随机数据
+                .setId(id)                                      //设置身份标记.客户端的唯一标记.可以使用用户主键,客户端的ip,服务器生成的随机数据
                 .setIssuer(iss)
                 .setSubject(subject)
-                .setIssuedAt(date)              //签发时间(token生成时间)
-                .signWith(signatureAlgorithm,encryptSalt);//设定密匙和算法
+                .setIssuedAt(date)                              //签发时间(token生成时间)
+                .signWith(signatureAlgorithm,encryptSalt);      //设定密匙和算法
         if(ttlMillis >= 0){     //
             long expMillis = nowMillis + ttlMillis;
-            Date exDate = new Date(expMillis + nowMillis);          //token的过期时间
-            builder.setExpiration(exDate);                          //设置有效期
+            Date exDate = new Date(expMillis + nowMillis);      //token的过期时间
+            builder.setExpiration(exDate);                      //设置有效期
         }
-        return builder.compact();                                   //生成token
+        return builder.compact();                               //生成token
     }
 
 

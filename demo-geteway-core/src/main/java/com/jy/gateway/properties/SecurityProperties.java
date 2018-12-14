@@ -18,8 +18,28 @@ public class SecurityProperties {
 	
 	private SocialProperties social = new SocialProperties();
 
+	private TokenProperties token = new TokenProperties();
+
+	private RequestHeaderProperties header = new RequestHeaderProperties();
+
+	public RequestHeaderProperties getHeader() {
+		return header;
+	}
+
+	public void setHeader(RequestHeaderProperties header) {
+		this.header = header;
+	}
+
 	public BrowserProperties getBrowser() {
 		return browser;
+	}
+
+	public TokenProperties getToken() {
+		return token;
+	}
+
+	public void setToken(TokenProperties token) {
+		this.token = token;
 	}
 
 	public void setBrowser(BrowserProperties browser) {

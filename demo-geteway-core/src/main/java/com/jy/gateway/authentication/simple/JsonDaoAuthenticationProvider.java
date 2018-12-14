@@ -148,7 +148,7 @@ public class JsonDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
 
         if (authentication.getCredentials() == null) {
             logger.debug("AbstractUserDetailsAuthenticationProvider.badCredentials");
-            throw new UsernameNotFoundException("用户名不存在");
+            throw new com.jy.gateway.exception.UsernameNotFoundException("用户名不存在");
         }
 
         String presentedPassword = authentication.getCredentials().toString();
@@ -156,8 +156,7 @@ public class JsonDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
         if (!passwordEncoder.isPasswordValid(userDetails.getPassword(),
                 presentedPassword, salt)) {
             logger.debug("Authentication failed: password does not match stored value");
-
-            throw new BadCredentialsException("密码错误");
+            throw new com.jy.gateway.exception.BadCredentialsException("密码错误");
         }
     }
 

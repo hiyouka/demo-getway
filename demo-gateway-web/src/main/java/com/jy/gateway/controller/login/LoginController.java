@@ -1,18 +1,27 @@
 package com.jy.gateway.controller.login;
 
+import com.jy.common.result.Result;
+import com.jy.common.sso.model.User;
+import com.jy.common.utils.ReflectUtils;
+import com.jy.gateway.properties.SecurityProperties;
 import com.jy.gateway.service.user.UserService;
+import com.jy.gateway.utils.EncodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -28,6 +37,11 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    @Value("${encrypt.salt}")
+    private String salt;
 
     @RequestMapping("/test")
     public String test(){
@@ -42,12 +56,6 @@ public class LoginController {
 
 //        return "redirect:/front/login";
 //        return "index";
-    }
-
-    @RequestMapping("/login")
-    public String index(){
-//        return "index";
-        return "redirect:/front/login";
     }
 
 
@@ -74,7 +82,9 @@ public class LoginController {
 
     @ResponseBody
     @GetMapping("/callable2")
-    public Callable<String> testCallable() throws InterruptedException {
+    public Callable<String> testCallable(HttpServletRequest request) throws InterruptedException {
+        HttpSession session = request.getSession(false);
+        System.out.println(session);
         logger.info("主线程开始！");
         Callable<String> result = new Callable<String>() {
             @Override
@@ -90,8 +100,13 @@ public class LoginController {
         return result;
     }
 
-
-
+    @ResponseBody
+    @PostMapping("/logoutProcess")
+    public Result logout(HttpServletRequest request){
+        String token = getRealToken(request);
+        userService.logout(token);
+        return Result.ok("ok");
+    }
 
 
     @RequestMapping("/loginFailure")
@@ -102,10 +117,34 @@ public class LoginController {
        return o.getClass()+"";
     }
 
-    @ResponseBody
     @RequestMapping("/handError")
     public Object handError(){
         LockedException lockedException = new LockedException("");
         return lockedException.getClass();
     }
+
+    @ResponseBody
+    @RequestMapping("/checkToken")
+    public Result check(HttpServletRequest request){
+        String token = getRealToken(request);
+        Map<String, Object> result = userService.checkToken(token);
+        return Result.error(Integer.parseInt(result.get("code")+""),result.get("auth")+"");
+    }
+
+    @ResponseBody
+    @GetMapping("/userInfo")
+    public Result getUserName(){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String, Object> result = ReflectUtils.getForMap(user, new String[]{"password"}, ReflectUtils.IGNORE, false);
+        return Result.ok(result);
+    }
+
+    private String getRealToken(HttpServletRequest request){
+        String header = request.getHeader(securityProperties.getToken().getAccessToken());
+        if(header == null){
+            return null;
+        }
+        return EncodeUtil.decrypt(header,salt);
+    }
+
 }

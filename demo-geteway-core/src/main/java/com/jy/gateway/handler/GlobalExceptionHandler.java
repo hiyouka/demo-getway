@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
 
 //    @ExceptionHandler(value = BadCredentialsException.class)
-//    public Object BadCredentialsExceptionHandler(BadCredentialsException e) throws Exception {
+//    public Object BadCredentialsExceptionHandler(BadCredentialsException e) throws exception {
 //        logger.error(e.getMessage(), e);
 //        return Result.error(103,e.getMessage());
 //    }

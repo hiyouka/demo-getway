@@ -36,8 +36,6 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-//		String encode = new BCryptPasswordEncoder().encode("123");
-//		System.out.println(encode);
 		SpringApplication.run(Main.class, args);
 	}
 

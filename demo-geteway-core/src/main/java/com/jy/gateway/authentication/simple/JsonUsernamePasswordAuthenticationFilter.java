@@ -32,8 +32,11 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
     private boolean postOnly = true;
 
 
+
+
     public JsonUsernamePasswordAuthenticationFilter() {
         super(new AntPathRequestMatcher("/login", "POST"));
+
     }
 
     @Override

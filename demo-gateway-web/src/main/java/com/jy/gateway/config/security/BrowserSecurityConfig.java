@@ -5,6 +5,7 @@ package com.jy.gateway.config.security;
 
 import com.jy.gateway.authentication.AbstractChannelSecurityConfig;
 import com.jy.gateway.authentication.simple.SimpleJsonAuthenticationConfig;
+import com.jy.gateway.authentication.token.TokenAuthenticationConfig;
 import com.jy.gateway.properties.SecurityConstants;
 import com.jy.gateway.properties.SecurityProperties;
 import com.jy.gateway.validate.code.ValidateCodeSecurityConfig;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.social.security.SpringSocialConfigurer;
@@ -40,18 +42,27 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 	private SpringSocialConfigurer springSocialConfigurer;
 
 	@Autowired
+	private TokenAuthenticationConfig tokenAuthenticationConfig;
+
+	@Autowired
 	private SimpleJsonAuthenticationConfig simpleJsonAuthenticationConfig;
 
-	private static String[] noLoginUrl = {"/handError","/loginFailure","/callable*","/front/login*","/front/notFind","/test", SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*"};
+
+
+	private static String[] noLoginUrl = {"/handError","/checkToken","/loginFailure","/callable*","/front/login","/front/notFind","/test", SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*","/front/blog/index","/front/**"};
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 		applyPasswordAuthenticationConfig(http);
 		http
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
 //				.apply(validateCodeSecurityConfig)
 //				.and()
-				.apply(springSocialConfigurer)
+//				.apply(springSocialConfigurer)
+//				.and()
+				.apply(tokenAuthenticationConfig)
 				.and()
 				.apply(simpleJsonAuthenticationConfig)
 				.and()
@@ -59,11 +70,12 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 				.antMatchers(noLoginUrl).permitAll()
 				.anyRequest()
 				.authenticated()
-				.and()
-				.logout().logoutUrl("/logout")
-				.invalidateHttpSession(true)
+//				.and()
+//				.logout().logoutUrl("/logout")
+//				.invalidateHttpSession(true)
 				.and()
 				.csrf().disable();
+//		http.logout().logoutUrl("/logout").logoutSuccessUrl("/logoutTodo").invalidateHttpSession(false);
 
 
 	}
@@ -75,7 +87,7 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/**/*.js","/**/*.min.js", "/**/*.png","/**/*.css","/*.git","/*.jpg",
+		web.ignoring().antMatchers("/**/*.js","/**/*.min.js", "/**/*.png","/**/*.css","/*.git","/*.jpg","/*.png",
 				"/static/**","/css/**","/**/favicon.ico","/js/**","/images/**", "/img/**","/imgs/**","/**/editor/**");//不拦截静态资源
 	}
 

@@ -51,9 +51,8 @@ public class WeixinOAuth2Template extends OAuth2Template {
 	@Override
 	public AccessGrant exchangeForAccess(String authorizationCode, String redirectUri,
                                          MultiValueMap<String, String> parameters) {
-		
+
 		StringBuilder accessTokenRequestUrl = new StringBuilder(accessTokenUrl);
-		
 		accessTokenRequestUrl.append("?appid="+clientId);
 		accessTokenRequestUrl.append("&secret="+clientSecret);
 		accessTokenRequestUrl.append("&code="+authorizationCode);

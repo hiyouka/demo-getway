@@ -1,19 +1,26 @@
 package com.jy.gateway.exception;
 
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import com.jy.common.exception.BusinessException;
+import com.jy.common.exception.StatusCode;
 
 /**
  * create by jianglei on 2018/12/2
  */
-public class UsernameNotFoundException extends InternalAuthenticationServiceException {
+public class UsernameNotFoundException extends BusinessException {
 
-    private static  String msg = "账户不存在";
+    private static  String msg = StatusCode.ACCOUNT_ERROR.getMsg();
+
+    private static Integer code = StatusCode.ACCOUNT_ERROR.getCode();
 
     public UsernameNotFoundException(){
-        super(msg);
+        super(code,msg);
     }
 
-    public UsernameNotFoundException( String msg) {
-        super(msg);
+    public UsernameNotFoundException(String msg){
+        super(code,msg);
+    }
+
+    public UsernameNotFoundException(Integer code,String msg) {
+        super(code,msg);
     }
 }

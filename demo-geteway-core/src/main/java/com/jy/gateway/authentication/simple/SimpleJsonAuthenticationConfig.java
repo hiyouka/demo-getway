@@ -22,7 +22,8 @@ public class SimpleJsonAuthenticationConfig extends SecurityConfigurerAdapter<De
     protected AuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
 
     @Autowired
-    protected AuthenticationFailureHandler defaultAuthenticationFailureHandler;
+    protected AuthenticationFailureHandler tokenAuthenticationSuccessHandler;
+    ;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -39,7 +40,7 @@ public class SimpleJsonAuthenticationConfig extends SecurityConfigurerAdapter<De
         JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter = new JsonUsernamePasswordAuthenticationFilter();
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(defaultAuthenticationSuccessHandler);
-        jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(defaultAuthenticationFailureHandler);
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(tokenAuthenticationSuccessHandler);
         JsonDaoAuthenticationProvider jsonDaoAuthenticationProvider = new JsonDaoAuthenticationProvider();
         jsonDaoAuthenticationProvider.setUserDetailsService(userDetailsService);
         jsonDaoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
