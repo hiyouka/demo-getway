@@ -51,7 +51,7 @@ public class TokenAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
             Map<String,Object> tokenMap = new HashMap<>();
             //生成token
             String header = request.getHeader(securityProperties.getHeader().getAppId());
-            if(header.equals(LoginWay.BROWSER)){
+            if(LoginWay.BROWSER.equals(header)){
                 logger.info("login way is browser ....");
             }
             String token = System.currentTimeMillis()+"";

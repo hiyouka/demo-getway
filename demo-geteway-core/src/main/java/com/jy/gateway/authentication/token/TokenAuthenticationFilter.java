@@ -3,6 +3,7 @@ package com.jy.gateway.authentication.token;
 import com.jy.common.exception.StatusCode;
 import com.jy.common.sso.model.User;
 import com.jy.common.utils.JsonUtils;
+import com.jy.common.utils.StringUtils;
 import com.jy.gateway.exception.LoginExpireException;
 import com.jy.gateway.properties.SecurityProperties;
 import com.jy.gateway.utils.EncodeUtil;
@@ -40,7 +41,7 @@ public class TokenAuthenticationFilter  extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String token = request.getHeader(securityProperties.getToken().getAccessToken());
-        if(token != null) {
+        if(!StringUtils.isEmpty(token)) {
             token = EncodeUtil.decrypt(token, salt);
             logger.info("check authentication token : " + token);
             Object data = redisTemplate.opsForValue().get(token);   //获取用户信息

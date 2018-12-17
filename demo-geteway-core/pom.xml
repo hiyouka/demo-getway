@@ -13,6 +13,7 @@
 
     <dependencies>
         <!-- add spring social support jar start-->
+
         <dependency>
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-config</artifactId>

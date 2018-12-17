@@ -108,7 +108,7 @@
 			<!--<version>1.3.0.RELEASE</version>-->
 		<!--</dependency>-->
 
-		<!-- oauth2 授权验证jar -->
+
 		<dependency>
 			<groupId>org.springframework.security.oauth</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
