@@ -145,12 +145,12 @@
 			<artifactId>common-sso</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.jy.common</groupId>
 			<artifactId>common-utils</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
 
 		<!-- jwt add -->
 		<dependency>
