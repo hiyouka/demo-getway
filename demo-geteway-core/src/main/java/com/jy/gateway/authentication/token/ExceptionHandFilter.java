@@ -25,6 +25,7 @@ public class ExceptionHandFilter extends OncePerRequestFilter {
         }catch (BusinessException exception){   //自定义业务异常处理
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(JsonUtils.toJson(Result.error(exception.getCode(),exception.getMessage())));
+            response.flushBuffer();
         }
     }
 }

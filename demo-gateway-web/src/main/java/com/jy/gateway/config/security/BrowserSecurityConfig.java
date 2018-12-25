@@ -5,6 +5,7 @@ package com.jy.gateway.config.security;
 
 import com.jy.gateway.authentication.AbstractChannelSecurityConfig;
 import com.jy.gateway.authentication.simple.SimpleJsonAuthenticationConfig;
+import com.jy.gateway.authentication.simple.UsernamePasswordProvider;
 import com.jy.gateway.authentication.token.TokenAuthenticationConfig;
 import com.jy.gateway.properties.SecurityConstants;
 import com.jy.gateway.properties.SecurityProperties;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.social.security.SpringSocialConfigurer;
@@ -49,6 +49,14 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
 
 
+	@Bean
+	public UsernamePasswordProvider usernamePasswordProvider(){
+		UsernamePasswordProvider provider = new UsernamePasswordProvider();
+		provider.setUserDetailsService(userDetailsService);
+		provider.setPasswordEncoder(passwordEncoder());
+		return provider;
+	}
+
 	private static String[] noLoginUrl = {"/handError","/checkToken","/loginFailure","/callable*","/front/login","/front/notFind","/test", SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*","/front/blog/index","/front/**"};
 
 	@Override
@@ -56,16 +64,18 @@ public class BrowserSecurityConfig extends AbstractChannelSecurityConfig {
 
 		applyPasswordAuthenticationConfig(http);
 		http
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
+				.authenticationProvider(usernamePasswordProvider())
+//				.addFilterBefore()
+//				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//				.and()
 //				.apply(validateCodeSecurityConfig)
 //				.and()
 //				.apply(springSocialConfigurer)
 //				.and()
 				.apply(tokenAuthenticationConfig)
 				.and()
-				.apply(simpleJsonAuthenticationConfig)
-				.and()
+//				.apply(simpleJsonAuthenticationConfig)
+//				.and()
 				.authorizeRequests()
 				.antMatchers(noLoginUrl).permitAll()
 				.anyRequest()

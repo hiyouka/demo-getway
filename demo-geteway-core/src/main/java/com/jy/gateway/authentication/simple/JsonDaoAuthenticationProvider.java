@@ -1,6 +1,5 @@
 package com.jy.gateway.authentication.simple;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.*;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.authentication.dao.SaltSource;
@@ -33,9 +32,8 @@ public class JsonDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
     // ~ Instance fields
     // ================================================================================================
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
+    private PasswordEncoder passwordEncoder;
 
     /**
      * The password used to perform
